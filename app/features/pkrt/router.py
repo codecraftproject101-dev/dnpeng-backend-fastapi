@@ -2,13 +2,13 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from typing import Optional
 from app.api.deps import get_db
-from app.features.pkrt.schema import PkrtCreate
+from app.features.pkrt.schema import PkrtCreate, PkrtResponse
 from app.features.pkrt import service
 
 router = APIRouter()
 
 
-@router.post("/data")
+@router.post("/data", response_model=PkrtResponse)
 def create_pkrt(data: PkrtCreate, db: Session = Depends(get_db)):
     return service.add_pkrt(db, data.kode, data.deskripsi, data.periode, data.nilai)
 
@@ -48,7 +48,7 @@ def indikator_list(db: Session = Depends(get_db)):
 
 
 @router.get("/latest")
-def indikator_list(db: Session = Depends(get_db)):
+def pkrt_latest(db: Session = Depends(get_db)):
     return service.get_latest(db)
 
 

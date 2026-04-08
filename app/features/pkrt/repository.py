@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import func, and_, or_
 from app.models.pkrt import Pkrt
-from app.features.pkrt.utils import parse_periode
+from app.services.timeseries import parse_periode
 
 
 def create_pkrt(db: Session, data: Pkrt):
@@ -59,17 +59,23 @@ def query_timeseries(
     if start_year:
         tahun, freq, period = parse_periode(start_year)
         query = query.filter(
-            Pkrt.tahun >= tahun,
-            Pkrt.freq == freq,
-            Pkrt.period >= period,
+            or_(
+                Pkrt.tahun > tahun,
+                and_(Pkrt.tahun == tahun, Pkrt.period >= period),
+            )
         )
+        query = query.filter(Pkrt.freq == freq)
+
     if end_year:
         tahun, freq, period = parse_periode(end_year)
         query = query.filter(
-            Pkrt.tahun <= tahun,
-            Pkrt.freq == freq,
-            Pkrt.period <= period,
+            or_(
+                Pkrt.tahun < tahun,
+                and_(Pkrt.tahun == tahun, Pkrt.period <= period),
+            )
         )
+        query = query.filter(Pkrt.freq == freq)
+
     return query.order_by(Pkrt.tahun, Pkrt.period).all()
 
 
