@@ -75,17 +75,8 @@ def get_growth_rate(db: Session, kode: int, jenis: str, type: str):
     data = repo.query_timeseries(db, kode, jenis)
     if not data:
         return {"kode": kode, "type": type, "data": []}
-    period_type = data[0].freq  # M atau Q
-    if type == "qtoq" or type == "mtom":
-        if period_type == "M" and type == "qtoq":
-            quarterly_data = monthly_to_quarterly(data)
-            result = compute_qtoq(quarterly_data)
-        elif (period_type == "Q" and type == "qtoq") or (
-            period_type == "M" and type == "mtom"
-        ):
-            result = compute_qtoq(data)
-        else:
-            result = []
+    if type == "qtoq":
+        result = compute_qtoq(data)
     elif type == "yony":
         result = compute_yony(data)
     elif type == "ctoc":

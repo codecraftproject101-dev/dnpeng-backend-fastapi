@@ -17,6 +17,8 @@ class Pkrt(Base):
     id = Column(Integer, primary_key=True, index=True)
     kode = Column(String, index=True, nullable=False)
     deskripsi = Column(String, nullable=False)
+    satuan = Column(String, nullable=False)
+    konversi = Column(String, nullable=False)
     tahun = Column(Integer, index=True, nullable=False)
     freq = Column(String(1), index=True, nullable=False)  # M / Q / Y
     period = Column(Integer, index=True, nullable=False)  # 1-12 / 1-4

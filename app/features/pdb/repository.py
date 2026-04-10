@@ -103,10 +103,8 @@ def query_timeseries(
     end_year: str | None = None,
 ):
     query = db.query(Pdb).filter(Pdb.kode == kode)
-
     if jenis:
         query = query.filter(Pdb.jenis == jenis)
-
     if start_year:
         tahun, freq, period = parse_periode(start_year)
         query = query.filter(
@@ -116,7 +114,6 @@ def query_timeseries(
             )
         )
         query = query.filter(Pdb.freq == freq)
-
     if end_year:
         tahun, freq, period = parse_periode(end_year)
         query = query.filter(
@@ -126,7 +123,6 @@ def query_timeseries(
             )
         )
         query = query.filter(Pdb.freq == freq)
-
     return query.order_by(Pdb.tahun, Pdb.period).all()
 
 

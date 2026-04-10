@@ -1,10 +1,19 @@
 from pydantic import BaseModel, field_validator
+from enum import Enum
 import re
+
+
+class KonversiEnum(str, Enum):
+    AVG = "AVG"
+    SUM = "SUM"
+    LAST = "LAST"
 
 
 class PkrtCreate(BaseModel):
     kode: str
     deskripsi: str
+    satuan: str
+    konversi: KonversiEnum
     periode: str
     nilai: float
 
@@ -20,6 +29,20 @@ class PkrtCreate(BaseModel):
     def validate_deskripsi(cls, v):
         if not v.strip():
             raise ValueError("deskripsi tidak boleh kosong")
+        return v
+
+    @field_validator("satuan")
+    def validate_satuan(cls, v):
+        if not v.strip():
+            raise ValueError("satuan tidak boleh kosong")
+        if not re.match(r"^[A-Za-z0-9/%\s]+$", v):
+            raise ValueError("satuan hanya boleh huruf, angka, spasi, /, %")
+        return v
+
+    @field_validator("konversi", mode="before")
+    def normalize_konversi(cls, v):
+        if isinstance(v, str):
+            return v.upper()
         return v
 
     @field_validator("periode")
@@ -42,6 +65,8 @@ class PkrtCreate(BaseModel):
 class PkrtResponse(BaseModel):
     kode: str
     deskripsi: str
+    satuan: str
+    konversi: str
     periode: str
     nilai: float
 

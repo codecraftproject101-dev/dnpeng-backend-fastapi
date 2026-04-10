@@ -52,8 +52,8 @@ def get_pkrt_by_periode(db: Session, periode: str):
 def query_timeseries(
     db: Session,
     kode: str,
-    start_year: int | None,
-    end_year: int | None,
+    start_year: str | None = None,
+    end_year: str | None = None,
 ):
     query = db.query(Pkrt).filter(Pkrt.kode == kode)
     if start_year:
@@ -65,7 +65,6 @@ def query_timeseries(
             )
         )
         query = query.filter(Pkrt.freq == freq)
-
     if end_year:
         tahun, freq, period = parse_periode(end_year)
         query = query.filter(
@@ -75,7 +74,6 @@ def query_timeseries(
             )
         )
         query = query.filter(Pkrt.freq == freq)
-
     return query.order_by(Pkrt.tahun, Pkrt.period).all()
 
 
