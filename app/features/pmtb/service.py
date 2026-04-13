@@ -1,8 +1,8 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from collections import defaultdict
-from app.models.pkrt import Pkrt
-from app.features.pkrt import repository as repo
+from app.models.pmtb import Pmtb
+from app.features.pmtb import repository as repo
 from app.services.timeseries import (
     parse_periode,
     monthly_to_quarterly,
@@ -13,7 +13,7 @@ from app.services.timeseries import (
 )
 
 
-def add_pkrt(
+def add_pmtb(
     db: Session,
     kode: str,
     deskripsi: str,
@@ -26,7 +26,7 @@ def add_pkrt(
         tahun, freq, period = parse_periode(periode)
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
-    data = Pkrt(
+    data = Pmtb(
         kode=kode,
         deskripsi=deskripsi,
         satuan=satuan,
@@ -36,24 +36,24 @@ def add_pkrt(
         period=period,
         nilai=nilai,
     )
-    return repo.create_pkrt(db, data)
+    return repo.create_pmtb(db, data)
 
 
-def get_pkrt_data(db: Session, kode: str | None, periode: str | None):
+def get_pmtb_data(db: Session, kode: str | None, periode: str | None):
     tahun = None
     freq = None
     period = None
     if periode:
         tahun, freq, period = parse_periode(periode)
-    return repo.filter_pkrt(db, kode, tahun, freq, period)
+    return repo.filter_pmtb(db, kode, tahun, freq, period)
 
 
-def get_pkrt_kode(db: Session, kode: str):
-    return repo.get_pkrt_by_kode(db, kode)
+def get_pmtb_kode(db: Session, kode: str):
+    return repo.get_pmtb_by_kode(db, kode)
 
 
-def get_pkrt_periode(db: Session, periode: str):
-    return repo.get_pkrt_by_periode(db, periode)
+def get_pmtb_periode(db: Session, periode: str):
+    return repo.get_pmtb_by_periode(db, periode)
 
 
 def get_timeseries(db: Session, kode: str, start: int | None, end: int | None):

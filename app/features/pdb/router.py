@@ -1,4 +1,8 @@
-from fastapi import APIRouter, Depends, Query
+from fastapi import (
+    APIRouter,
+    Depends,
+    Query,
+)
 from sqlalchemy.orm import Session
 from typing import Optional
 from app.api.deps import get_db

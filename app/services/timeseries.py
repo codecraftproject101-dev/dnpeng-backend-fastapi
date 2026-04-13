@@ -12,79 +12,16 @@ def parse_periode(periode: str):
         raise ValueError("Format periode tidak valid")
 
 
-# def detect_shift(data):
-#     if not data:
-#         return 1
-#     freq = data[0].freq
-#     if freq == "Q":
-#         return 4
-#     if freq == "M":
-#         return 12
-#     return 1
-
-
 def detect_shift(data):
     first = data[0]
-
     if isinstance(first, dict):
         freq = first.get("freq", "Q")  # default Q biar aman
     else:
         freq = first.freq
-
     if freq == "M":
         return 12
     elif freq == "Q":
         return 4
-
-
-# def monthly_to_quarterly(data):
-#     result = []
-#     for i in range(0, len(data), 3):
-#         chunk = data[i : i + 3]
-#         if len(chunk) < 3:
-#             continue
-#         total = sum(d.nilai for d in chunk)
-#         result.append(
-#             {
-#                 "periode": chunk[-1].periode,  # pakai bulan terakhir sebagai label
-#                 "nilai": total,
-#                 "freq": "Q",
-#                 "period": (i // 3) % 4 + 1,  # ✅ ini penting!
-#             }
-#         )
-#     return result
-
-
-# def monthly_to_quarterly(data):
-#     result = []
-#     if not data:
-#         return result
-
-#     konversi = data[0].konversi  # ✅ ambil dari data
-#     if konversi != "NaN":
-#         for i in range(0, len(data), 3):
-#             chunk = data[i : i + 3]
-#             if len(chunk) < 3:
-#                 continue
-#             values = [d.nilai for d in chunk]
-#             # tentukan agregasi berdasarkan konversi
-#             if konversi == "SUM":
-#                 nilai = sum(values)
-#             elif konversi == "AVG":
-#                 nilai = sum(values) / len(values)
-#             elif konversi == "LAST":
-#                 nilai = values[-1]
-#             else:
-#                 raise ValueError(f"Metode konversi tidak dikenali: {konversi}")
-#             result.append(
-#                 {
-#                     "periode": chunk[-1].periode,
-#                     "nilai": nilai,
-#                     "freq": "Q",
-#                     "period": (i // 3) % 4 + 1,
-#                 }
-#             )
-#     return result
 
 
 def monthly_to_quarterly(data):
@@ -152,24 +89,6 @@ def compute_qtoq(data):
     return result
 
 
-# def compute_yony(data):
-#     shift = detect_shift(data)
-#     result = []
-#     for i, d in enumerate(data):
-#         if i < shift:
-#             growth = None
-#         else:
-#             growth = calc_growth(d.nilai, data[i - shift].nilai)
-#         result.append(
-#             {
-#                 "periode": d.periode,
-#                 "nilai": d.nilai,
-#                 "growth": growth,
-#             }
-#         )
-#     return result
-
-
 def compute_yony(data):
     shift = detect_shift(data)
     result = []
@@ -190,28 +109,6 @@ def compute_yony(data):
             }
         )
     return result
-
-
-# def compute_ctoc(data):
-#     shift = detect_shift(data)
-#     result = []
-#     for i, d in enumerate(data):
-#         if i < shift:
-#             growth = None
-#             current_sum = None
-#         else:
-#             current_sum = sum(data[i - j].nilai for j in range(d.period))
-#             prev_sum = sum(data[i - shift - j].nilai for j in range(d.period))
-#             growth = calc_growth(current_sum, prev_sum)
-#         result.append(
-#             {
-#                 "periode": d.periode,
-#                 "nilai": d.nilai,
-#                 "cumulative": current_sum,
-#                 "growth": growth,
-#             }
-#         )
-#     return result
 
 
 def compute_ctoc(data):

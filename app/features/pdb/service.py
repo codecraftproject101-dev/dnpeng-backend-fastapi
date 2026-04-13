@@ -5,7 +5,6 @@ from app.models.pdb import Pdb
 from app.features.pdb import repository as repo
 from app.services.timeseries import (
     parse_periode,
-    monthly_to_quarterly,
     compute_qtoq,
     compute_yony,
     compute_ctoc,

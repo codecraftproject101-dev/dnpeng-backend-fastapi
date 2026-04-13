@@ -1,5 +1,9 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import func, and_, or_
+from sqlalchemy import (
+    func,
+    and_,
+    or_,
+)
 from app.models.pdb import Pdb
 from app.services.timeseries import parse_periode
 
@@ -68,33 +72,6 @@ def get_pdb_by_periode(
     )
 
 
-# def query_timeseries(
-#     db: Session,
-#     kode: int,
-#     jenis: str | None = None,
-#     start_year: int | None = None,
-#     end_year: int | None = None,
-# ):
-#     query = db.query(Pdb).filter(Pdb.kode == kode)
-#     if jenis:
-#         query = query.filter(Pdb.jenis == jenis)
-#     if start_year:
-#         tahun, freq, period = parse_periode(start_year)
-#         query = query.filter(
-#             Pdb.tahun >= tahun,
-#             Pdb.freq == freq,
-#             Pdb.period >= period,
-#         )
-#     if end_year:
-#         tahun, freq, period = parse_periode(end_year)
-#         query = query.filter(
-#             Pdb.tahun <= tahun,
-#             Pdb.freq == freq,
-#             Pdb.period <= period,
-#         )
-#     return query.order_by(Pdb.kode, Pdb.tahun, Pdb.period).all()
-
-
 def query_timeseries(
     db: Session,
     kode: int,
@@ -127,7 +104,7 @@ def query_timeseries(
 
 
 def get_indikator_list(db: Session):
-    return db.query(Pdb.kode, Pdb.deskripsi).order_by(Pdb.kode).distinct().all()
+    return db.query(Pdb.kode, Pdb.deskripsi).distinct().order_by(Pdb.kode).all()
 
 
 def get_latest(db: Session, jenis: str | None = None):

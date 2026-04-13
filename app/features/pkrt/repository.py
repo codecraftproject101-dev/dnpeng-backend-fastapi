@@ -1,5 +1,9 @@
 from sqlalchemy.orm import Session
-from sqlalchemy import func, and_, or_
+from sqlalchemy import (
+    func,
+    and_,
+    or_,
+)
 from app.models.pkrt import Pkrt
 from app.services.timeseries import parse_periode
 
@@ -78,7 +82,7 @@ def query_timeseries(
 
 
 def get_indikator_list(db: Session):
-    return db.query(Pkrt.kode, Pkrt.deskripsi).distinct().all()
+    return db.query(Pkrt.kode, Pkrt.deskripsi).distinct().order_by(Pkrt.kode).all()
 
 
 def get_latest(db: Session):
